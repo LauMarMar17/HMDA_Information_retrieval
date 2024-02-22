@@ -187,7 +187,7 @@ def perform_comparation(my_img_path, cars_df, n1=0.5, n2=0.5):
             text = ocr(img_path)
 
             # compare histograms
-            _, hist_comparative = compare_histograms(my_hist, hist, print_results=False)
+            hist_comparative, _ = compare_histograms(my_hist, hist, print_results=False)
             # compare words
             _, text_comparative = compare_text(my_text, text, print_results=False)
 
