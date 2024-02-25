@@ -22,4 +22,4 @@ Implementation of a "toy" Content Based Information Retrieval system which recie
 
 The [dataset](data/Formula_one_cars) contains sevaral Formula One images from diferent teams (Alpha Tauri, Ferrari, McLaren, Mercedes, Racing Point, RedBull, Renault, Williams).
 
-The Notebook can be found [here](Assignment2/non_textual_data_extraction.ipynb), which use some functions found [dataset](Assignment2/functions.py). Also, the [file.py](Assignment2/non_textual_data_extraction.py) allows the user to select a query image (introducing a number) and returns the 5 most similar images.
+The Notebook can be found [here](Assignment2/non_textual_data_extraction.ipynb), which use some functions found [functions.py](Assignment2/functions.py). Also, the [non_textual_data_extraction.py](Assignment2/non_textual_data_extraction.py) allows the user to select a query image (introducing a number) and returns the 5 most similar images.
