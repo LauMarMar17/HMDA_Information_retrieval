@@ -56,6 +56,15 @@ def preprocess_text(text):
                    (tokenize(remove_punct(text))))))))
 
 def excel_to_df(excel_file):
+    """
+    Reads an excel file and returns a dataframe with all the sheets concatenated.
+    
+    Args:
+    excel_file: str, path to the excel file
+    
+    Returns:
+    df: pandas dataframe
+    """
     sheets_dict = pd.read_excel(excel_file, sheet_name=None, skiprows=1, header=1)
     all_sheets = []
     for name, sheet in sheets_dict.items():
@@ -101,6 +110,17 @@ def add_docnos(docnos, file, train_docnos, train_file, test_docnos, test_file):
     return out_file, out_train_file, out_test_file
     
 def df_to_svmlight_files(df):
+    """
+    Transforms a dataframe into svmlight files
+    
+    Args:
+    df: pandas dataframe
+    
+    Returns:
+    out_file: str, path to the svmlight file
+    out_train_file: str, path to the svmlight file
+    out_test_file: str, path to the svmlight file
+    """
     if len(df) == 201:
         file = 'loinc_dataset-v2_without_docnos.dat'
         train_file = 'train_loinc_dataset-v2_without_docnos.dat'
@@ -115,10 +135,10 @@ def df_to_svmlight_files(df):
     
     # Get document features
     tfidf = TfidfVectorizer()
+    # New column with the text cleaned
     df['clean_text'] = df['long_common_name'].apply(lambda x: preprocess_text(x))
     X = tfidf.fit_transform(df['clean_text']).toarray()
     
-    # Each document in the df has a set of features
     # Each document in the df has a set of features
     df['features'] = X.tolist()
     # Split dataset in training (70%) and testing (30%)
@@ -127,9 +147,11 @@ def df_to_svmlight_files(df):
     # DataFrame to numpy array
     qid = df['qid'].to_numpy()
     y = df['Label'].to_numpy()
+    
     X_train = np.array(train_df['features'].values.tolist())
     qid_train = train_df['qid'].to_numpy()
     y_train = train_df['Label'].to_numpy()
+    
     X_test = np.array(test_df['features'].values.tolist())
     qid_test = test_df['qid'].to_numpy()
     y_test = test_df['Label'].to_numpy()
