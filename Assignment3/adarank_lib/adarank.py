@@ -16,10 +16,10 @@ from adarank_lib.metrics import NDCGScorer
 class AdaRank(sklearn.base.BaseEstimator):
     """AdaRank algorithm"""
 
-    def __init__(self, max_iter=500, tol=0.0001, estop=1, verbose=False, scorer=None):
+    def __init__(self, max_iter=500, tol=0.0001, stop=1, verbose=False, scorer=None):
         self.max_iter = max_iter
         self.tol = tol
-        self.estop = estop
+        self.stop = stop
         self.verbose = verbose
         self.scorer = scorer
 
@@ -52,7 +52,7 @@ class AdaRank(sklearn.base.BaseEstimator):
         best_perf_train = -np.inf
         best_perf_valid = -np.inf
         used_fids = []
-        estop = None
+        stop = None
 
         self.n_iter = 0
         while self.n_iter < self.max_iter:
@@ -100,18 +100,18 @@ class AdaRank(sklearn.base.BaseEstimator):
 
             # update the best validation scores
             if perf_valid > best_perf_valid + self.tol:
-                estop = 0
+                stop = 0
                 best_perf_valid = perf_valid
                 self.coef_ = coef.copy()
             else:
-                estop += 1
+                stop += 1
 
             # update the best training score
             if perf_train > best_perf_train + self.tol:
                 best_perf_train = perf_train
             else:
                 # stop if scores on both sets fail to improve
-                if estop >= self.estop:
+                if stop >= self.stop:
                     break
 
             # update weights
