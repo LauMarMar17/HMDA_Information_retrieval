@@ -5,21 +5,10 @@ This script...
 import string as st
 import re
 import nltk
-from nltk.tokenize import word_tokenize, PorterStemmer
-from nltk import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+from nltk import WordNetLemmatizer, PorterStemmer
 
-
-# def remove_punct(df):
-#     """
-#     This function removes punctuation from the 'plot'
-#     column of the dataframe.
-#     """
-#     df['no_punct'] = df['plot'].str.replace('[{}]'.format(st.punctuation), '').str.lower()
-#     # replace any double-space by single-space
-#     df['no_punct'] = df['no_punct'].str.replace('  ', ' ')
-#     # remove leading and trailing whitespaces
-#     df['no_punct'] = df['no_punct'].str.strip()
-#     return df
+#nltk.download("punkt")
 
 
 def remove_punct(text):
@@ -37,7 +26,6 @@ def tokenize(text, opt="nlkt"):
     if opt == "re":
         return text.apply(lambda x: re.split("\s+", x))
     elif opt == "nlkt":
-        nltk.download("punkt")
         return text.apply(lambda x: word_tokenize(x))
 
 
@@ -73,22 +61,25 @@ def return_sentences(tokens):
     return " ".join([word for word in tokens])
 
 
-def process_text(df):
+def process_text(df, opt = 'lemmatize'):
     """This function processes the text by removing punctuation, tokenizing,
     removing small words, removing stopwords, and stemming.
     """
     # remove punctuation
     df["no_punct"] = remove_punct(df["plot"])
     # tokenize
-    df["tokenized"] = tokenize(df["no_punct"])
+    df["tokenized"] = tokenize(df["no_punct"], opt="nlkt")
     # remove small words
     df["no_small_words"] = df["tokenized"].apply(lambda x: remove_small_words(x))
     # remove stopwords
     df["no_stopwords"] = df["no_small_words"].apply(lambda x: remove_stopwords(x))
-    # stemming
-    df["stemmed"] = df["no_stopwords"].apply(lambda x: stemming(x))
-    # lemmatize
-    df["lemmatized"] = df["no_stopwords"].apply(lambda x: lemmatize(x))
+    # stemming or lemmatize (default is lemmatize)
+    if opt == 'stem':
+        # stemming
+        df["stemmed"] = df["no_stopwords"].apply(lambda x: stemming(x))
+    elif opt == 'lemmatize':
+        # lemmatize
+        df["lemmatized"] = df["no_stopwords"].apply(lambda x: lemmatize(x))
     # pos tagging
     df["pos_tagged"] = df["no_stopwords"].apply(lambda x: get_pos_tag(x))
     # return sentences

@@ -2,7 +2,7 @@
 This script...
 """
 import pandas as pd 
-from functions import *
+from Assignment1.preprocess import *
 
 def get_data():
     train_df = pd.read_csv('../data/Movies/train_data.csv', header=None)
